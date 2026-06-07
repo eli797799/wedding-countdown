@@ -1,0 +1,8 @@
+# מבטיח שסקריפט gradlew יישאר עם סיומות שורה של יוניקס (LF) כדי שירוץ בענן (Linux).
+android/gradlew text eol=lf
+*.sh text eol=lf
+*.bat text eol=crlf
+# קבצים בינאריים
+*.jar binary
+*.png binary
+*.jpg binary

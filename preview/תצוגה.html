@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<title>ספירה לאחור לחתונה — תצוגה חיה</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  :root {
+    --deep-rose: #9C4A63;
+    --rose: #D98AA0;
+    --blush: #F6E7EC;
+    --gold: #C9A86A;
+    --cream: #FDF8F5;
+    --charcoal: #2B2330;
+  }
+  html, body {
+    height: 100%;
+    font-family: 'Segoe UI', 'Heebo', Arial, sans-serif;
+    background: #2b2330;
+  }
+  body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 16px;
+  }
+
+  /* מסגרת טלפון — יחס מסך תואם QIN F22 Pro (כ-480×640, מסך נמוך וריבועי) */
+  .phone {
+    position: relative;
+    width: 100%;
+    max-width: 360px;
+    aspect-ratio: 480 / 640;
+    max-height: 94vh;
+    border-radius: 28px;
+    overflow: hidden;
+    box-shadow: 0 30px 80px rgba(0,0,0,.55), 0 0 0 10px #111 inset;
+    background: #000;
+  }
+
+  /* רקע */
+  .screen {
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(180deg, rgba(0,0,0,.35), rgba(0,0,0,.15) 40%, rgba(0,0,0,.55)),
+      linear-gradient(180deg, #3B2233 0%, #6E3A52 50%, #B76E84 100%);
+    background-size: cover;
+    background-position: center;
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    text-align: center;
+    padding: 5% 18px 18px;
+    overflow: hidden;
+    transition: background-image .3s ease;
+  }
+  .screen.has-image { }
+
+  .gear {
+    position: absolute;
+    top: 50px; left: 22px;
+    width: 42px; height: 42px;
+    border-radius: 50%;
+    background: rgba(255,255,255,.16);
+    border: none;
+    color: #fff;
+    font-size: 20px;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    backdrop-filter: blur(4px);
+  }
+
+  .heart { font-size: 40px; color: var(--rose); filter: drop-shadow(0 4px 10px rgba(0,0,0,.4)); }
+
+  .title {
+    font-size: 34px;
+    font-weight: 800;
+    margin-top: 12px;
+    line-height: 1.2;
+    text-shadow: 0 4px 12px rgba(0,0,0,.5);
+    max-width: 320px;
+  }
+
+  .names {
+    margin-top: 6px;
+    color: var(--gold);
+    font-size: 18px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-shadow: 0 3px 10px rgba(0,0,0,.55);
+  }
+
+  .divider {
+    color: rgba(201, 168, 106, 0.4);
+    margin: 14px 0 26px;
+    font-size: 14px;
+    letter-spacing: 6px;
+  }
+
+  .tiles {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-top: 15%;
+  }
+  .tile {
+    width: 74px; height: 86px;
+    border-radius: 20px;
+    background: rgba(255,255,255,.16);
+    border: 1px solid rgba(255,255,255,.35);
+    box-shadow: 0 8px 16px rgba(0,0,0,.25);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(6px);
+  }
+  .tile .num {
+    font-size: 34px;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+  }
+  .tile .lbl {
+    font-size: 13px;
+    color: var(--blush);
+    margin-top: 4px;
+  }
+
+  .date {
+    margin-top: 26px;
+    font-size: 15px;
+    color: var(--blush);
+    text-shadow: 0 2px 8px rgba(0,0,0,.5);
+  }
+
+  .bigday {
+    margin-top: 6px;
+    padding: 26px 28px;
+    border-radius: 24px;
+    background: rgba(255,255,255,.18);
+    border: 1.5px solid rgba(201,168,106,.85);
+  }
+  .bigday .emoji { font-size: 48px; }
+  .bigday .msg { font-size: 32px; font-weight: 800; margin-top: 10px; text-shadow: 0 3px 10px rgba(0,0,0,.5); }
+
+  .edit {
+    margin-top: auto;
+    margin-bottom: 6px;
+    padding: 12px 22px;
+    border-radius: 30px;
+    background: rgba(255,255,255,.15);
+    border: none;
+    color: #fff;
+    font-size: 15px;
+    cursor: pointer;
+    backdrop-filter: blur(4px);
+  }
+
+  /* מסך הגדרות */
+  .settings {
+    position: absolute;
+    inset: 0;
+    background: var(--cream);
+    color: var(--charcoal);
+    transform: translateY(100%);
+    transition: transform .3s ease;
+    display: flex;
+    flex-direction: column;
+  }
+  .settings.open { transform: translateY(0); }
+  .settings .bar {
+    background: var(--deep-rose);
+    color: #fff;
+    padding: 54px 18px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    font-size: 20px;
+    font-weight: 700;
+  }
+  .settings .back {
+    position: absolute; right: 16px; top: 52px;
+    background: none; border: none; color: #fff; font-size: 22px; cursor: pointer;
+  }
+  .settings .body { padding: 18px; overflow-y: auto; flex: 1; }
+  .card {
+    background: #fff;
+    border-radius: 20px;
+    padding: 18px;
+    margin-bottom: 16px;
+    box-shadow: 0 6px 16px rgba(156,74,99,.08);
+  }
+  .card h3 { font-size: 16px; color: var(--deep-rose); margin-bottom: 12px; }
+  .card input[type=text],
+  .card input[type=date],
+  .card input[type=time] {
+    width: 100%;
+    padding: 12px 14px;
+    border-radius: 14px;
+    border: none;
+    background: rgba(246,231,236,.6);
+    font-size: 16px;
+    font-family: inherit;
+    color: var(--charcoal);
+  }
+  .imgrow { display: flex; gap: 10px; align-items: center; }
+  .preview {
+    width: 110px; height: 70px; border-radius: 12px;
+    background: linear-gradient(135deg,#3B2233,#B76E84);
+    background-size: cover; background-position: center;
+    flex-shrink: 0;
+  }
+  .btn-outline {
+    flex: 1;
+    padding: 12px;
+    border-radius: 12px;
+    border: 1.5px solid var(--deep-rose);
+    background: #fff;
+    color: var(--deep-rose);
+    font-size: 15px;
+    cursor: pointer;
+    font-family: inherit;
+  }
+  .save {
+    margin: 4px 18px 22px;
+    padding: 16px;
+    border-radius: 16px;
+    border: none;
+    background: var(--deep-rose);
+    color: #fff;
+    font-size: 18px;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: inherit;
+  }
+  .hint {
+    text-align:center; color:#9a8; font-size:12px; margin-top:8px;
+  }
+</style>
+</head>
+<body>
+  <div class="phone">
+    <!-- מסך ראשי -->
+    <div class="screen" id="screen">
+      <div class="heart">♥</div>
+      <div class="title" id="title">עד החתונה שלנו</div>
+      <div class="names">אלי &amp; אביטל</div>
+      <div class="divider">⸻ ♥ ⸻</div>
+
+      <div class="tiles" id="tiles">
+        <div class="tile"><div class="num" id="s">00</div><div class="lbl">שניות</div></div>
+        <div class="tile"><div class="num" id="m">00</div><div class="lbl">דקות</div></div>
+        <div class="tile"><div class="num" id="h">0</div><div class="lbl">שעות</div></div>
+      </div>
+
+      <div class="bigday" id="bigday" style="display:none">
+        <div class="emoji">🎉</div>
+        <div class="msg">היום הגדול הגיע!</div>
+      </div>
+
+      <div class="date" id="dateLabel"></div>
+    </div>
+  </div>
+
+<script>
+  const months = ['ינואר','פברואר','מרץ','אפריל','מאי','יוני','יולי','אוגוסט','ספטמבר','אוקטובר','נובמבר','דצמבר'];
+  const days = ['יום ראשון','יום שני','יום שלישי','יום רביעי','יום חמישי','יום שישי','שבת'];
+
+  // הכל מוגדר מראש — אין מסך הגדרות.
+  // מועד קבוע: י"ד בתמוז תשפ"ו = יום שני, 29 ביוני 2026, חופה בשעה 19:00.
+  const WEDDING_TARGET = new Date(2026, 5, 29, 19, 0, 0, 0).getTime();
+  const WEDDING_HEBREW = 'יום שני · י״ד בתמוז תשפ״ו';
+  const WEDDING_TITLE = 'עד החתונה שלנו';
+
+  function applyState() {
+    document.getElementById('title').textContent = WEDDING_TITLE;
+    const screen = document.getElementById('screen');
+    // תמונת רקע מוגדרת מראש (background.jpg) עם שכבת כהות לקריאות.
+    screen.style.backgroundImage =
+      "linear-gradient(180deg, rgba(0,0,0,.55) 0%, rgba(0,0,0,.12) 32%, rgba(0,0,0,.20) 60%, rgba(0,0,0,.62) 100%), url('background.jpg')";
+    const t = new Date(WEDDING_TARGET);
+    const greg = t.getDate() + ' ב' + months[t.getMonth()] + ' ' + t.getFullYear();
+    document.getElementById('dateLabel').innerHTML =
+      '<div style="font-size:18px;font-weight:700;color:#fff;">' + WEDDING_HEBREW + '</div>' +
+      '<div style="font-size:14px;margin-top:4px;">' + greg + '</div>';
+  }
+
+  function tick() {
+    const now = Date.now();
+    const diff = WEDDING_TARGET - now;
+    const tiles = document.getElementById('tiles');
+    const bigday = document.getElementById('bigday');
+    if (diff <= 0) {
+      tiles.style.display = 'none';
+      bigday.style.display = 'block';
+      return;
+    }
+    tiles.style.display = 'flex';
+    bigday.style.display = 'none';
+    const sec = Math.floor(diff / 1000);
+    const h = Math.floor(sec / 3600);        // סך השעות הכולל
+    const m = Math.floor(sec / 60) % 60;
+    const s = sec % 60;
+    document.getElementById('h').textContent = h;
+    document.getElementById('m').textContent = String(m).padStart(2,'0');
+    document.getElementById('s').textContent = String(s).padStart(2,'0');
+  }
+
+  applyState();
+  tick();
+  setInterval(tick, 1000);
+</script>
+</body>
+</html>
