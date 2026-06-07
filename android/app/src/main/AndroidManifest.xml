@@ -3,7 +3,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
-        android:label="ספירה לחתונה"
+        android:label="אלי &amp; אביטל"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher"
         android:roundIcon="@mipmap/ic_launcher">
@@ -36,7 +36,7 @@
         <receiver
             android:name=".WeddingWidgetProvider"
             android:exported="true"
-            android:label="ספירה לחתונה">
+            android:label="אלי &amp; אביטל">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
